@@ -1,11 +1,14 @@
 """Скрипт для заполнения данными таблиц в БД Postgres."""
 
 import csv
+import logging
 
 import psycopg2
 from psycopg2.extensions import connection, cursor
 
-from settings import PASSWORD, LST_TABLES
+from settings import PASSWORD, LST_TABLES, PATH_TO_LOG
+
+log = logging.getLogger(__name__)
 
 
 def upload_data_to_table(cur: cursor, path: str, table_name: str) -> None:
@@ -35,10 +38,15 @@ def main():
                 for table_name, path in LST_TABLES:
                     upload_data_to_table(cur, path, table_name)
     except Exception as e:
-        raise e
+        log.error(e)
+        print(f'Произошла ошибка, записана в {PATH_TO_LOG}')
     finally:
         conn.close()
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG,
+                        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                        filename=PATH_TO_LOG,
+                        encoding='utf-8')
     main()
