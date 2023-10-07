@@ -20,7 +20,7 @@ SELECT last_name, first_name, home_phone
   SELECT country, COUNT(*) as "count"
     FROM suppliers
 GROUP BY country
-ORDER BY cnt DESC;
+ORDER BY "count" DESC;
 
 -- 5. суммарный вес заказов (в которых известен регион) по странам, но вывести только те результаты, где суммарный вес на страну больше 2750. Отсортировать по убыванию суммарного веса (см таблицу orders, колонки ship_region, ship_country, freight)
   SELECT ship_country, SUM(freight) as "sum"
