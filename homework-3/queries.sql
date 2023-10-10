@@ -3,8 +3,8 @@
 -- когда и заказчик и сотрудник зарегистрированы в городе London, а доставку заказа ведет компания United Package (company_name в табл shippers)
 SELECT c.company_name AS customer, CONCAT(e.first_name, ' ', e.last_name) AS employee
   FROM customers c
-  JOIN orders o ON c.customer_id = o.customer_id
-  JOIN employees e ON o.employee_id = e.employee_id
+  JOIN orders o USING(customer_id)
+  JOIN employees e USING(employee_id)
   JOIN shippers s ON o.ship_via = s.shipper_id
  WHERE c.city = 'London' AND e.city = 'London' AND s.company_name = 'United Package';
 
@@ -14,8 +14,8 @@ SELECT c.company_name AS customer, CONCAT(e.first_name, ' ', e.last_name) AS emp
 -- Отсортировать результат по возрастанию количества оставшегося товара.
   SELECT p.product_name, p.units_in_stock, s.contact_name, s.phone
     FROM products p
-    JOIN suppliers s ON p.supplier_id = s.supplier_id
-    JOIN categories c ON p.category_id = c.category_id
+    JOIN suppliers s USING(supplier_id)
+    JOIN categories c USING(category_id)
    WHERE p.discontinued = 0
      AND p.units_in_stock < 25
      AND c.category_name IN ('Dairy Products', 'Condiments')
@@ -24,7 +24,7 @@ ORDER BY p.units_in_stock ASC;
 -- 3. Список компаний заказчиков (company_name из табл customers), не сделавших ни одного заказа
    SELECT c.company_name
      FROM customers c
-LEFT JOIN orders o ON c.customer_id = o.customer_id
+LEFT JOIN orders o USING(customer_id)
     WHERE o.order_id IS NULL;
 
 -- 4. уникальные названия продуктов, которых заказано ровно 10 единиц (количество заказанных единиц см в колонке quantity табл order_details)
